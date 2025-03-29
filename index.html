@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Doppio Java Playground</title>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/browserfs@1.4.3/dist/browserfs.min.js"
+    ></script>
+    <script type="text/javascript" src="doppio.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+      }
+      textarea {
+        width: 100%;
+        height: 200px;
+        font-family: monospace;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        padding: 8px;
+      }
+      #console {
+        width: 100%;
+        height: 200px;
+        font-family: monospace;
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        padding: 8px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      #status {
+        color: #666;
+        margin: 10px 0;
+        font-style: italic;
+      }
+      #progress {
+        margin-top: 5px;
+        height: 20px;
+        background-color: #f0f0f0;
+        border-radius: 3px;
+        overflow: hidden;
+        display: none;
+      }
+      #progress-bar {
+        height: 100%;
+        background-color: #4caf50;
+        width: 0%;
+        transition: width 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Doppio Java Playground</h1>
+    <p>Write your Java code below and click "Run" to execute it.</p>
+
+    <textarea id="code" placeholder="Enter your Java code here">
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello from Doppio!");
+        
+        // Try some basic operations
+        int x = 5;
+        int y = 10;
+        System.out.println("x + y = " + (x + y));
+        
+        // Try a loop
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Loop iteration: " + i);
+        }
+    }
+}
+    </textarea>
+
+    <div>
+      <button id="runButton" disabled>Run</button>
+      <button id="clearButton">Clear Console</button>
+    </div>
+
+    <div id="status">Initializing Doppio...</div>
+    <div id="progress"><div id="progress-bar"></div></div>
+
+    <h3>Console Output:</h3>
+    <div id="console"></div>
+    <script>
+      // Global variables
+      let fsReady = false;
+      let doppioReady = false;
+
+      // initialize BrowserFS
+      function initFS() {
+        BrowserFS.install(window);
+
+        // Create a MountableFileSystem
+        const mfs = new BrowserFS.FileSystem.MountableFileSystem();
+        BrowserFS.initialize(mfs);
+
+        // temporary storage
+        mfs.mount("/tmp", new BrowserFS.FileSystem.InMemory());
+
+        // mount release directory
+        mfs.mount("/release", new BrowserFS.FileSystem.InMemory());
+
+        const fs = BrowserFS.BFSRequire("fs");
+
+        try {
+          // create necessary directories
+          createDirectoryIfNotExists(fs, "/tmp");
+          createDirectoryIfNotExists(fs, "/release/vendor");
+          createDirectoryIfNotExists(fs, "/release/vendor/java_home");
+          createDirectoryIfNotExists(fs, "/release/vendor/java_home/lib");
+          createDirectoryIfNotExists(fs, "/release/vendor/natives");
+
+          // copy java_home files to BrowserFS
+          copyJavaHomeToBrowserFS(fs)
+            .then(() => {
+              // initial Java code
+              fs.writeFileSync(
+                "/tmp/Main.java",
+                document.getElementById("code").value
+              );
+              console.log("Wrote Main.java to /tmp");
+
+              // Verify Main.java exists
+              const mainJavaContent = fs.readFileSync("/tmp/Main.java", "utf8");
+              console.log("Main.java content:", mainJavaContent);
+
+              fsReady = true;
+              checkAllReady();
+              document.getElementById("status").textContent =
+                "File system initialized";
+            })
+            .catch((err) => {
+              console.error("Error copying java_home files:", err);
+              document.getElementById("status").textContent =
+                "Error copying java_home files: " + err.message;
+            });
+        } catch (e) {
+          console.error("Error setting up FS:", e);
+          document.getElementById("status").textContent =
+            "Error in FS: " + e.message;
+        }
+      }
+
+      // Helper function to create directory if it doesn't exist
+      function createDirectoryIfNotExists(fs, path) {
+        try {
+          fs.mkdirSync(path);
+          console.log(`Created directory: ${path}`);
+        } catch (e) {
+          if (e.code !== "EEXIST") throw e;
+        }
+      }
+
+      // Copy java_home files to BrowserFS
+      async function copyJavaHomeToBrowserFS(fs) {
+        const keyFiles = [
+          "lib/doppio.jar",
+          "lib/rt.jar",
+          "lib/charsets.jar",
+          "lib/jce.jar",
+          "lib/jsse.jar",
+          "lib/tools.jar",
+          "lib/currency.data",
+        ];
+
+        for (const file of keyFiles) {
+          const localFilePath = `release/vendor/java_home/${file}`;
+          const virtualFilePath = `/release/vendor/java_home/${file}`;
+          try {
+            console.log(`Attempting to fetch ${localFilePath}`);
+            const response = await fetch(localFilePath);
+            if (!response.ok) {
+              throw new Error(
+                `Failed to fetch ${localFilePath}: ${response.status} ${response.statusText}`
+              );
+            }
+            const buffer = await response.arrayBuffer();
+            if (buffer.byteLength === 0) {
+              throw new Error(`Fetched ${localFilePath} but the file is empty`);
+            }
+            const dirPath = virtualFilePath.substring(
+              0,
+              virtualFilePath.lastIndexOf("/")
+            );
+            createDirectoryIfNotExists(fs, dirPath);
+            fs.writeFileSync(virtualFilePath, Buffer.from(buffer));
+            console.log(`Copied ${localFilePath} to ${virtualFilePath}`);
+
+            // Verify the file was written correctly
+            const stats = fs.statSync(virtualFilePath);
+            console.log(`File ${virtualFilePath} size: ${stats.size} bytes`);
+
+            // Additional check for currency.data specifically
+            if (file === "lib/currency.data") {
+              const exists = fs.existsSync(virtualFilePath);
+              console.log(
+                `Does /release/vendor/java_home/lib/currency.data exist in BrowserFS? ${exists}`
+              );
+              if (exists) {
+                const content = fs.readFileSync(virtualFilePath);
+                console.log(
+                  `currency.data size in BrowserFS: ${content.length} bytes`
+                );
+              }
+            }
+          } catch (err) {
+            console.error(`Error copying ${localFilePath}:`, err);
+            throw err;
+          }
+        }
+      }
+
+      // Load Doppio
+      function loadDoppio() {
+        if (typeof window.Doppio === "undefined") {
+          console.error("Doppio not loaded. Check doppio.js");
+          document.getElementById("status").textContent =
+            "Error: Doppio not loaded";
+          return;
+        }
+        console.log("Doppio loaded successfully");
+        doppioReady = true;
+        checkAllReady();
+      }
+
+      // Check if everything is ready
+      function checkAllReady() {
+        if (fsReady && doppioReady) {
+          document.getElementById("status").textContent =
+            "Ready to run Java code";
+          document.getElementById("runButton").disabled = false;
+        }
+      }
+
+      // Set up console output
+      function setupConsole() {
+        const consoleDiv = document.getElementById("console");
+        const process = BrowserFS.BFSRequire("process");
+        process.initializeTTYs();
+
+        process.stdout.on("data", function (data) {
+          consoleDiv.textContent += data.toString();
+        });
+        process.stderr.on("data", function (data) {
+          consoleDiv.textContent += "Error: " + data.toString();
+        });
+      }
+
+      // Run Java code
+      function runJavaCode() {
+        const consoleDiv = document.getElementById("console");
+        const code = document.getElementById("code").value;
+
+        consoleDiv.textContent = "";
+        document.getElementById("runButton").disabled = true;
+        document.getElementById("status").textContent =
+          "Compiling and running...";
+
+        const fs = BrowserFS.BFSRequire("fs");
+        try {
+          fs.writeFileSync("/tmp/Main.java", code);
+          console.log("Updated Main.java");
+
+          // Verify Main.java content
+          const mainJavaContent = fs.readFileSync("/tmp/Main.java", "utf8");
+          console.log("Main.java content before compilation:", mainJavaContent);
+
+          // Define the classpath to include tools.jar
+          const classpath = [
+            "/release/vendor/java_home/lib/doppio.jar",
+            "/release/vendor/java_home/lib/rt.jar",
+            "/release/vendor/java_home/lib/tools.jar",
+          ].join(":");
+
+          console.log("Using classpath for compilation:", classpath);
+
+          // Try to compile Main.java first
+          Doppio.VM.CLI(
+            [
+              "-classpath",
+              classpath,
+              "com.sun.tools.javac.Main",
+              "/tmp/Main.java",
+            ],
+            {
+              doppioHomePath: "/release",
+              javaHomePath: "/release/vendor/java_home",
+              nativeClasspath: ["/release/vendor/natives"],
+            },
+            function (exitCode) {
+              if (exitCode === 0) {
+                console.log("Compilation successful");
+                document.getElementById("status").textContent =
+                  "Compilation successful, running...";
+
+                try {
+                  const mainClassExists = fs.existsSync("/tmp/Main.class");
+                  console.log("Main.class exists:", mainClassExists);
+                  if (mainClassExists) {
+                    const mainClassStats = fs.statSync("/tmp/Main.class");
+                    console.log(
+                      "Main.class size:",
+                      mainClassStats.size,
+                      "bytes"
+                    );
+                  }
+                } catch (e) {
+                  console.error("Error checking Main.class:", e);
+                }
+
+                console.log("File system contents of /tmp:");
+                try {
+                  const files = fs.readdirSync("/tmp");
+                  console.log(files);
+
+                  if (files.includes("Main.class")) {
+                    const classContent = fs.readFileSync("/tmp/Main.class");
+                    console.log("Main.class size:", classContent.length);
+                    console.log(
+                      "Main.class first bytes:",
+                      Array.from(classContent.slice(0, 4))
+                    );
+                  }
+                } catch (err) {
+                  console.error("Error checking /tmp directory:", err);
+                }
+
+                Doppio.VM.CLI(
+                  ["-classpath", "/tmp", "Main"],
+                  {
+                    doppioHomePath: "/release",
+                    javaHomePath: "/release/vendor/java_home",
+                    nativeClasspath: ["/release/vendor/natives"],
+                  },
+                  function (exitCode) {
+                    document.getElementById("runButton").disabled = false;
+
+                    if (exitCode === 0) {
+                      document.getElementById("status").textContent =
+                        "Execution completed successfully";
+                    } else {
+                      document.getElementById("status").textContent =
+                        "Execution failed with exit code: " + exitCode;
+                    }
+                  }
+                );
+              } else {
+                console.error("Compilation failed with exit code:", exitCode);
+                document.getElementById("status").textContent =
+                  "Compilation failed with exit code: " + exitCode;
+                document.getElementById("runButton").disabled = false;
+              }
+            }
+          );
+        } catch (e) {
+          consoleDiv.textContent += "Error: " + e.message + "\n";
+          document.getElementById("status").textContent =
+            "Error running code: " + e.message;
+          document.getElementById("runButton").disabled = false;
+          console.error("Run error:", e);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("runButton")
+          .addEventListener("click", runJavaCode);
+        document
+          .getElementById("clearButton")
+          .addEventListener("click", function () {
+            document.getElementById("console").textContent = "";
+          });
+
+        initFS();
+        setupConsole();
+        loadDoppio();
+      });
+    </script>
+  </body>
+</html>
