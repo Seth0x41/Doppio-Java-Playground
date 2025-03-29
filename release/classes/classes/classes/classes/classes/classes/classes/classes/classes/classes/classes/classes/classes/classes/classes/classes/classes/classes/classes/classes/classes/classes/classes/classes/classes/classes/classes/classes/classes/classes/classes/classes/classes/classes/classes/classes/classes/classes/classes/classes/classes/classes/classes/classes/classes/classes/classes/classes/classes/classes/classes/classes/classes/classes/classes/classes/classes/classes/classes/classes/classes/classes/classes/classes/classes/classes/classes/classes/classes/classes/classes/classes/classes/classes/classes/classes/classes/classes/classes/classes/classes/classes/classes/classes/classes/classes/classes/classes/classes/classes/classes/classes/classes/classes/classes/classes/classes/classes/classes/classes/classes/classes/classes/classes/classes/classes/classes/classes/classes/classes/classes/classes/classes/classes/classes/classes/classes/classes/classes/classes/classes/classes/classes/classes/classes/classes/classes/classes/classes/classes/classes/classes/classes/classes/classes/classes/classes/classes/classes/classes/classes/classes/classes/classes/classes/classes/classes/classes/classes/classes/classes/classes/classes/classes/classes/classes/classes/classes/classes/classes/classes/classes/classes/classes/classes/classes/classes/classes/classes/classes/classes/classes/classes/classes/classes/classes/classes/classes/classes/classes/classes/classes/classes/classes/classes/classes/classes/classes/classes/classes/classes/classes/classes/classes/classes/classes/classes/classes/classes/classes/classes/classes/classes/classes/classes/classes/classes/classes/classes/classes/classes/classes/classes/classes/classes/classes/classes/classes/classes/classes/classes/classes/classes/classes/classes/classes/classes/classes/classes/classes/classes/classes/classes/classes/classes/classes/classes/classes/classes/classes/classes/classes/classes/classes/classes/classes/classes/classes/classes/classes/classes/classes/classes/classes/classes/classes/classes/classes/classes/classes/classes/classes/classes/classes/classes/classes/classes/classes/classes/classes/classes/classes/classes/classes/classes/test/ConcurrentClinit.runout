@@ -1,0 +1,7 @@
+Initializing Foo with Thread A
+Initializing Bar with Thread B
+Interrupted
+Finished initializing Foo with Thread A
+Made a Foo
+Made a Foo
+Finished initializing Bar with Thread B

@@ -1,0 +1,48 @@
+Successfully threw exception for nonexistent file.
+Is '' an absolute path?: false
+Real path:
+Does the absolute path of '' exist?: true
+Does the normalized path of '' exist?: true
+Does abspath == norm.abspath?: false
+Does abspath.real == normalized path?: false
+Does '' exist?: true
+Can you write to ''?: true
+[./classes/test/data/FileOps/.hiddenfile]
+[./classes/test/data/FileOps/contains_data.txt]
+[./classes/test/data/FileOps/regularfile]
+Does contains_data.txt exist?: true
+Length of contains_data.txt: 340
+Is the tmpdir a directory?: true
+Can I write to it?: true
+Does temp_delete_me.txt exist?: false
+Creating file...
+And does it exist now?: true
+Can I write to it?: true
+File size: 0
+Last modified updated?: true
+New file size: 18
+File contents:
+Why, hello there!
+Appending to file's end...
+New file size: 31
+File contents:
+Why, hello there!
+A second line
+Deleting file: true
+Does the file exist?: false
+Does tempDir exist?: false
+Making tempDir...
+Does tempDir exist now?: true
+Deleting tempDir: true
+Does tempDir exist now?: false
+Does tempDir/tempDir exist?: false
+Making tempDir/tempDir....
+Does tempDir/tempDir exist now?: true
+Does tempDir exist now?: true
+Couldn't delete non-empty directory
+Deleting tempDir/tempDir: true
+Deleting tempDir: true
+Does tempDir/tempDir exist now?: false
+Does tempDir exist now?: false
+couldn't create a directory that already exists
+Created tempDir. Does it exist? true

@@ -1,0 +1,35 @@
+Testing: byte
+Setting signers to:null
+Expecting:null
+Got: null
+-------
+Testing: byte
+Setting signers to:array of length: 2
+Expecting:null
+Got: null
+-------
+Testing: void
+Setting signers to:array of length: 2
+Expecting:null
+Got: null
+-------
+Testing: class classes.test.CustomClassLoader3
+Setting signers to:array of length: 2
+Expecting:array of length: 2
+Got: array of length: 2
+-------
+Testing: class classes.test.CustomClassLoader3
+Setting signers to:null
+Expecting:null
+Got: null
+-------
+Testing: class [Lclasses.test.CustomClassLoader3;
+Setting signers to:null
+Expecting:null
+Got: null
+-------
+Testing: class [Lclasses.test.CustomClassLoader3;
+Setting signers to:array of length: 2
+Expecting:null
+Got: null
+-------

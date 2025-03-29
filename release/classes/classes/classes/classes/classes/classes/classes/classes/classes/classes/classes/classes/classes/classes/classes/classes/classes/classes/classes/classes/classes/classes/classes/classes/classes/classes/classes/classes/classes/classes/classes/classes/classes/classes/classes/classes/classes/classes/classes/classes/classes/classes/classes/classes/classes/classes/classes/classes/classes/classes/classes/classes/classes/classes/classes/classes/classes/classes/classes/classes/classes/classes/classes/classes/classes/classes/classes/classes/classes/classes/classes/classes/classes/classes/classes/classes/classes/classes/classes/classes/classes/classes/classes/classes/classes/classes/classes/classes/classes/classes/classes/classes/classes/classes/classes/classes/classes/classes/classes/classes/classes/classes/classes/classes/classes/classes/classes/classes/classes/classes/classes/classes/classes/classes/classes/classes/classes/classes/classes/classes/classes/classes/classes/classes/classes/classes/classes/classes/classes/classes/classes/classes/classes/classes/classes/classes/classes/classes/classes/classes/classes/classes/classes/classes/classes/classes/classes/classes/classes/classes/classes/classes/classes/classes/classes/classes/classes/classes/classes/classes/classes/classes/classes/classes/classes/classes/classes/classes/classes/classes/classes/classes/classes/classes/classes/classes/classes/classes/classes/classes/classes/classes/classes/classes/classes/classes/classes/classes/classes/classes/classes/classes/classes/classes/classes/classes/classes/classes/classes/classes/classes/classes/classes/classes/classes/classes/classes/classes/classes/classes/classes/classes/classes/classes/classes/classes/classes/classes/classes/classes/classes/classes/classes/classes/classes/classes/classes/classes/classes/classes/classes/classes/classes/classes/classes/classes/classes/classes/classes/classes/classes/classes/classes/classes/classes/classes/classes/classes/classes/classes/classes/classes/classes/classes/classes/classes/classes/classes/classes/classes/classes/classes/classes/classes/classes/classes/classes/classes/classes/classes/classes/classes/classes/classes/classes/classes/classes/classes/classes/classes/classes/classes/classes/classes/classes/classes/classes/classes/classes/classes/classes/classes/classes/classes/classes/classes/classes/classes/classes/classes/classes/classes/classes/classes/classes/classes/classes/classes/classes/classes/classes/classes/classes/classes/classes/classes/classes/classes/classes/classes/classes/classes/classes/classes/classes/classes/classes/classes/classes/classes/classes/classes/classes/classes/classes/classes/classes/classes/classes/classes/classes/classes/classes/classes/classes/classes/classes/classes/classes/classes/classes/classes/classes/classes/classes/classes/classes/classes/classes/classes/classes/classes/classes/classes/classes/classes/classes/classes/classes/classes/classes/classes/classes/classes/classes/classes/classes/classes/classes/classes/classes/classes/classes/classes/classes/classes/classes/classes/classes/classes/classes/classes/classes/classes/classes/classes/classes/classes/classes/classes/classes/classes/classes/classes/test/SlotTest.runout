@@ -1,0 +1,365 @@
+classes.test.shared_classes.ISpeak.ISpeakHelper: speak
+	Reflection:
+		Found!
+ISpeakHelper speaking!
+	MethodHandle Lookup:
+	Invoke:
+ISpeakHelper speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelper)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelper)void but found (ISpeak)void
+classes.test.shared_classes.ISpeak.ISpeakHelper: protectedSpeak
+	Reflection:
+		Found!
+Protected ISpeakHelper speak!
+	MethodHandle Lookup:
+	Invoke:
+Protected ISpeakHelper speak!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelper)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelper)void but found (ISpeak)void
+classes.test.shared_classes.ISpeak.ISpeakHelper: privateSpeak
+	Reflection:
+		Found!
+		IllegalAccessException.
+	MethodHandle Lookup:
+		IllegalAccessExcetpion
+classes.test.shared_classes.ISpeak.ISpeakHelperStatic: speak
+	Reflection:
+		Found!
+ISpeakHelperStatic speaking!
+	MethodHandle Lookup:
+	Invoke:
+ISpeakHelperStatic speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelperStatic)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelperStatic)void but found (ISpeak)void
+classes.test.shared_classes.ISpeak.ISpeakHelperStatic: protectedSpeak
+	Reflection:
+		Found!
+Protected ISpeakHelperStatic speak!
+	MethodHandle Lookup:
+	Invoke:
+Protected ISpeakHelperStatic speak!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelperStatic)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelperStatic)void but found (ISpeak)void
+classes.test.shared_classes.ISpeak.ISpeakHelperStatic: privateSpeak
+	Reflection:
+		Found!
+		IllegalAccessException.
+	MethodHandle Lookup:
+		IllegalAccessExcetpion
+classes.test.shared_classes.InnerSpeakImpl: speak
+	Reflection:
+		Found!
+InnerSpeakImpl Speaking!
+	MethodHandle Lookup:
+	Invoke:
+InnerSpeakImpl Speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (InnerSpeakImpl)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (InnerSpeakImpl)void but found (ISpeak)void
+classes.test.shared_classes.InnerSpeakImpl: protectedSpeak
+	Reflection:
+		Found!
+Protected InnerSpeakImpl speak!
+	MethodHandle Lookup:
+	Invoke:
+Protected InnerSpeakImpl speak!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (InnerSpeakImpl)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (InnerSpeakImpl)void but found (ISpeak)void
+classes.test.shared_classes.InnerSpeakImpl: privateSpeak
+	Reflection:
+		Found!
+		IllegalAccessException.
+	MethodHandle Lookup:
+		IllegalAccessExcetpion
+classes.test.shared_classes.ISpeak.ISpeakHelper: speak
+	Reflection:
+		Found!
+ISpeakHelper speaking!
+	MethodHandle Lookup:
+	Invoke:
+ISpeakHelper speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelper)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelper)void but found (ISpeak)void
+classes.test.shared_classes.ISpeak.ISpeakHelperStatic: speak
+	Reflection:
+		Found!
+ISpeakHelperStatic speaking!
+	MethodHandle Lookup:
+	Invoke:
+ISpeakHelperStatic speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelperStatic)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeakHelperStatic)void but found (ISpeak)void
+classes.test.shared_classes.SpeakImpl: speak
+	Reflection:
+		Found!
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	MethodHandle Lookup:
+	Invoke:
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (SpeakImpl)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (SpeakImpl)void but found (ISpeak)void
+classes.test.shared_classes.SpeakImplChild: speak
+	Reflection:
+		Found!
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	MethodHandle Lookup:
+	Invoke:
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (SpeakImplChild)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (SpeakImplChild)void but found (ISpeak)void
+classes.test.shared_classes.SpeakImplChildChild: speak
+	Reflection:
+		No such method!
+	MethodHandle Lookup:
+	Invoke:
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (SpeakImplChildChild)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (SpeakImplChildChild)void but found (ISpeak)void
+classes.test.shared_classes.NaturalSpeakerChild: speak
+	Reflection:
+		No such method!
+	MethodHandle Lookup:
+	Invoke:
+Natural speaker.
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (NaturalSpeakerChild)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (NaturalSpeakerChild)void but found (ISpeak)void
+classes.test.shared_classes.EmptySpeakImpl: speak
+	Reflection:
+		No such method!
+	MethodHandle Lookup:
+	Invoke:
+ISpeak2 Speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (EmptySpeakImpl)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (EmptySpeakImpl)void but found (ISpeak)void
+classes.test.shared_classes.EmptySpeakImplChild: speak
+	Reflection:
+		No such method!
+	MethodHandle Lookup:
+	Invoke:
+ISpeak2 Speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (EmptySpeakImplChild)void but found (Object)void
+	InvokeExact as ISpeak:
+		Encountered throwable: java.lang.invoke.WrongMethodTypeException: handle's method type (EmptySpeakImplChild)void but found (ISpeak)void
+classes.test.shared_classes.ISpeak: getClass
+	Reflection:
+		No such method!
+	MethodHandle Lookup:
+		No such method!
+classes.test.shared_classes.ISpeak: clone
+	Reflection:
+		No such method!
+	MethodHandle Lookup:
+		No such method!
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+Anonymous Speak Class!
+	MethodHandle Lookup:
+	Invoke:
+Anonymous Speak Class!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+Anonymous Speak Class!
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+ISpeakHelper speaking!
+	MethodHandle Lookup:
+	Invoke:
+ISpeakHelper speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+ISpeakHelper speaking!
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+ISpeakHelperStatic speaking!
+	MethodHandle Lookup:
+	Invoke:
+ISpeakHelperStatic speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+ISpeakHelperStatic speaking!
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	MethodHandle Lookup:
+	Invoke:
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	MethodHandle Lookup:
+	Invoke:
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	MethodHandle Lookup:
+	Invoke:
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+Natural speaker.
+	MethodHandle Lookup:
+	Invoke:
+Natural speaker.
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+Natural speaker.
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+ISpeak2 Speaking!
+	MethodHandle Lookup:
+	Invoke:
+ISpeak2 Speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+ISpeak2 Speaking!
+classes.test.shared_classes.ISpeak: speak
+	Reflection:
+		Found!
+ISpeak2 Speaking!
+	MethodHandle Lookup:
+	Invoke:
+ISpeak2 Speaking!
+	InvokeExact
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (ISpeak)void but found (Object)void
+	InvokeExact as ISpeak:
+ISpeak2 Speaking!
+Looking up method classes.test.shared_classes.ISpeak$ISpeakHelperStatic.speak
+	Found method.
+ISpeakHelperStatic speaking!
+MethodHandle:
+	Invoke
+ISpeakHelperStatic speaking!
+	InvokeExact
+ISpeakHelperStatic speaking!
+Looking up method classes.test.shared_classes.ISpeak$ISpeakHelperStatic.protectedSpeak
+	Found method.
+	IllegalAccessException
+MethodHandle:
+	IllegalAccessException
+Looking up method classes.test.shared_classes.ISpeak$ISpeakHelperStatic.privateSpeak
+	Found method.
+	IllegalAccessException
+MethodHandle:
+	IllegalAccessException
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (BigDecimal,int)BigDecimal but found (Object,int)Object
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (BigDecimal,int)BigDecimal but found (Object,byte)Object
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (BigDecimal,int)BigDecimal but found (Object,Object)Object
+WrongMethodTypeException: java.lang.invoke.WrongMethodTypeException: handle's method type (BigDecimal,int)BigDecimal but found (Object,int)Object
+Caught: java.lang.ClassCastException: Cannot cast java.lang.Object to java.math.BigDecimal
+Throwing exception through reflection...
+Invoke:
+Caught exception: java.lang.Exception: I throw exceptions.
+java.lang.Exception: I throw exceptions.
+	at classes.test.SlotTest.throwsException(SlotTest.java:61)
+	at classes.test.SlotTest.throwsException(SlotTest.java:63)
+	at classes.test.SlotTest.throwsException(SlotTest.java:63)
+	at classes.test.SlotTest.throwsException(SlotTest.java:63)
+	at classes.test.SlotTest.main(SlotTest.java:138)
+InvokeExact:
+Caught exception: java.lang.Exception: I throw exceptions.
+java.lang.Exception: I throw exceptions.
+	at classes.test.SlotTest.throwsException(SlotTest.java:61)
+	at classes.test.SlotTest.throwsException(SlotTest.java:63)
+	at classes.test.SlotTest.throwsException(SlotTest.java:63)
+	at classes.test.SlotTest.throwsException(SlotTest.java:63)
+	at classes.test.SlotTest.main(SlotTest.java:145)
+Reflection:
+Caught exception: java.lang.reflect.InvocationTargetException
+Attempting to call invoke methods via reflection...
+Via reflection...
+InvocationTargetException cause: java.lang.UnsupportedOperationException: MethodHandle.invoke cannot be invoked reflectively
+Trying to unreflect...
+UnsupportedOperationException: java.lang.UnsupportedOperationException: cannot reflectively invoke MethodHandle
+Via reflection...
+InvocationTargetException cause: java.lang.UnsupportedOperationException: MethodHandle.invokeExact cannot be invoked reflectively
+Trying to unreflect...
+UnsupportedOperationException: java.lang.UnsupportedOperationException: cannot reflectively invoke MethodHandle

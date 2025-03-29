@@ -1,0 +1,9 @@
+Interrupting one thread.
+Interrupted
+Notifying one thread.
+Notifying the rest of the threads.
+Main thread relinquishing lock!
+Not interrupted
+Not interrupted
+Not interrupted
+Not interrupted

@@ -1,0 +1,2 @@
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "javax.script.ScriptEngine.eval(String)" because "<local1>" is null
+	at classes.test.NashornTest.main(NashornTest.java:18)

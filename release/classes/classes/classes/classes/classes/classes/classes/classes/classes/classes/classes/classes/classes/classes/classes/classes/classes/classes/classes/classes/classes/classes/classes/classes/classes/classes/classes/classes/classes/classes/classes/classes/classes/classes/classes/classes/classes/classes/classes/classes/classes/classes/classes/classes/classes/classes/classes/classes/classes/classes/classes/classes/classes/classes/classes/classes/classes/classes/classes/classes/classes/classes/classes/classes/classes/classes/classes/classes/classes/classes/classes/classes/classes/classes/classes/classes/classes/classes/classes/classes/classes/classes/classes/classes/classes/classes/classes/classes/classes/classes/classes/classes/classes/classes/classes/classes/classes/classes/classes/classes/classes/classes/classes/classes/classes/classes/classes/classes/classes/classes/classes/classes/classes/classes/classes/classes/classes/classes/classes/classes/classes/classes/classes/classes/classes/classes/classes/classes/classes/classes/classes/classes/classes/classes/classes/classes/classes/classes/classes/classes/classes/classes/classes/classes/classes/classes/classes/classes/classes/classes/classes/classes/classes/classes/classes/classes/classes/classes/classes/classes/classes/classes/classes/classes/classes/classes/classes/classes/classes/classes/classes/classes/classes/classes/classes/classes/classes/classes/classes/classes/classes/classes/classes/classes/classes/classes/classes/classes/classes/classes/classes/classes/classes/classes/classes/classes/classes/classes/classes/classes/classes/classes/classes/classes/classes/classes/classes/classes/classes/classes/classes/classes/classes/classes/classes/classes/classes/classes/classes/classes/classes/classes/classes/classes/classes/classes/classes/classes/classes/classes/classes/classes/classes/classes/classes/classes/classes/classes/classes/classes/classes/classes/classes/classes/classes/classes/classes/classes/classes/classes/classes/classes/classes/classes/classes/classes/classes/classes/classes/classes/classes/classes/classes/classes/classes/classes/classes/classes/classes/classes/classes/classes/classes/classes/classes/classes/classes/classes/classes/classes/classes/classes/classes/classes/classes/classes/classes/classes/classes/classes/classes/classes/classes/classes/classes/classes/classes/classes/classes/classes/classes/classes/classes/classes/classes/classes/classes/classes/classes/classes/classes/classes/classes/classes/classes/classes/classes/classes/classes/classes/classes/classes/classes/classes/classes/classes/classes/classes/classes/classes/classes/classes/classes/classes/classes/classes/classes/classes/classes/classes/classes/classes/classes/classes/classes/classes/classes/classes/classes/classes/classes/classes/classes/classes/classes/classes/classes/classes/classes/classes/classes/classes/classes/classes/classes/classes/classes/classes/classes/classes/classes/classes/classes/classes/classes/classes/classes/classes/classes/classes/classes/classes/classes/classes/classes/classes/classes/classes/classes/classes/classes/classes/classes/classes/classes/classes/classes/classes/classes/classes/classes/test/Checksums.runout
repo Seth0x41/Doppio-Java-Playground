@@ -1,0 +1,8 @@
+java.util.zip.CRC32 (individual bytes): AD4E9F10
+java.util.zip.Adler32 (individual bytes): 80F3089D
+java.util.zip.CRC32 (byte arrays): AD4E9F10
+java.util.zip.Adler32 (byte arrays): 80F3089D
+CRC32 (byte buffer non-direct): AD4E9F10
+Adler32 (byte buffer non-direct): 80F3089D
+CRC32 (byte buffer direct): AD4E9F10
+Adler32 (byte buffer direct): 80F3089D

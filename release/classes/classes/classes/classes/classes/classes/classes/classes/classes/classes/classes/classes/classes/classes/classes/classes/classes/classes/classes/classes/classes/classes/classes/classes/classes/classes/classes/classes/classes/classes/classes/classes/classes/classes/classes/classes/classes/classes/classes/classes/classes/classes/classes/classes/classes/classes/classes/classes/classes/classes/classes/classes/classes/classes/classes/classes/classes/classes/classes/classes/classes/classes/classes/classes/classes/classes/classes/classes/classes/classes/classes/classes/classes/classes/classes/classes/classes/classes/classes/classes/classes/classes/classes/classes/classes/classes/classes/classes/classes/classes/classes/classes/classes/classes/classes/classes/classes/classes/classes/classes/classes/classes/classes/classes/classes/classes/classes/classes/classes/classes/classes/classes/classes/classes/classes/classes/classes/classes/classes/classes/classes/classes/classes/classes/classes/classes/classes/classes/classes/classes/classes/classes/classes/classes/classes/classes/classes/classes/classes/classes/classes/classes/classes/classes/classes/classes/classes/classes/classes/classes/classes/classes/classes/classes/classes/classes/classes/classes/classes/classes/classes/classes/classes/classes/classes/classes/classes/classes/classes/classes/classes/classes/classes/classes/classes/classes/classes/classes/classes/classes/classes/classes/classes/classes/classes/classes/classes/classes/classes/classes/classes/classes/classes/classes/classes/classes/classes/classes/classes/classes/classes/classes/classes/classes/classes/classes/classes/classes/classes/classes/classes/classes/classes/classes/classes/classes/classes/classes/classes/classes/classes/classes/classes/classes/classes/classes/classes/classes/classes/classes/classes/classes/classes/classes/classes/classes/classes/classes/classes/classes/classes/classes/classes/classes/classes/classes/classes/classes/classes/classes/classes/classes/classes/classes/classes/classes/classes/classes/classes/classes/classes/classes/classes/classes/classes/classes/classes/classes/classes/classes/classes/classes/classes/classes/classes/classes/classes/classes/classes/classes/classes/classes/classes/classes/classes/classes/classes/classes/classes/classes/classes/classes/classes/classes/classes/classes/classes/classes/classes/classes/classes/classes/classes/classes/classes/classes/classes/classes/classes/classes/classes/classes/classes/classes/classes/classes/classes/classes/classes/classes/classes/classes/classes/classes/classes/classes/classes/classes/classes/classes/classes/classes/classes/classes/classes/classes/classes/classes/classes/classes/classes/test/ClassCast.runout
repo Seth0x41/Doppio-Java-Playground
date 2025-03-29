@@ -1,0 +1,5 @@
+Caught ClassCastException as expected: class classes.test.ClassCast$B cannot be cast to class classes.test.ClassCast$A (classes.test.ClassCast$B and classes.test.ClassCast$A are in unnamed module of loader 'app')
+true
+false
+true
+true

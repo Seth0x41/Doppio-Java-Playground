@@ -1,0 +1,12 @@
+Annotations on Annotations Class
+@java.lang.Deprecated(forRemoval=false, since="")
+Annotations on TestField
+@classes.test.Option(required=false, usage="", name="Whoo")
+Annotations on NoAnnotationsField
+Annotations on main method
+@classes.test.Option(required=true, usage="nope", name="main")
+Annotations on main method parameters
+@classes.test.Option(required=false, usage="", name="args")
+Annotations on Option
+@java.lang.annotation.Retention(RUNTIME)
+@java.lang.annotation.Target({FIELD, METHOD, PARAMETER})

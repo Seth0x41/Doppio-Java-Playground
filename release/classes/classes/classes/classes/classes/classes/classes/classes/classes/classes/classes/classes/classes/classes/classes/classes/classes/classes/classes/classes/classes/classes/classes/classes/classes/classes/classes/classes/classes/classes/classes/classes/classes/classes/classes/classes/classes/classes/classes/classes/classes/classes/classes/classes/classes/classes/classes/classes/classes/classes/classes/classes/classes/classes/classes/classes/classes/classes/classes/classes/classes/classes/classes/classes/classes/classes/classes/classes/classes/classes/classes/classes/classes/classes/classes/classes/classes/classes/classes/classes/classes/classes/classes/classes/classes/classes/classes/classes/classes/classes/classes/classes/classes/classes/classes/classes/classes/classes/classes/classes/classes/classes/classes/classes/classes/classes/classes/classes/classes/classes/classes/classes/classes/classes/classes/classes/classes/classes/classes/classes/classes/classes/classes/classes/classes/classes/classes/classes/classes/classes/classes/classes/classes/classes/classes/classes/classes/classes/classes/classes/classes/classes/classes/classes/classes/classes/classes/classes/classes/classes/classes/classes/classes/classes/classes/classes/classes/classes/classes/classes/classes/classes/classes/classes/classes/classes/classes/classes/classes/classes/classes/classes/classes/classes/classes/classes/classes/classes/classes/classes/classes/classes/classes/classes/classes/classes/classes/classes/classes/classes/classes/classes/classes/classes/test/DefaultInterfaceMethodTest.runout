@@ -1,0 +1,28 @@
+Speaker Class: classes.test.shared_classes.InnerSpeakImpl
+InnerSpeakImpl Speaking!
+Speaker Class: classes.test.shared_classes.ISpeak.ISpeakHelper
+ISpeakHelper speaking!
+Speaker Class: classes.test.shared_classes.ISpeak.ISpeakHelperStatic
+ISpeakHelperStatic speaking!
+Speaker Class: classes.test.shared_classes.SpeakImpl
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+Speaker Class: classes.test.shared_classes.SpeakImplChild
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+Speaker Class: classes.test.shared_classes.SpeakImplChildChild
+SpeakImplChild speak
+ISpeak2 Speaking!
+InnerSpeakImpl Speaking!
+SpeakImpl speak
+Speaker Class: classes.test.shared_classes.NaturalSpeakerChild
+Natural speaker.
+Speaker Class: classes.test.shared_classes.EmptySpeakImpl
+ISpeak2 Speaking!
+Speaker Class: classes.test.shared_classes.EmptySpeakImplChild
+ISpeak2 Speaking!
+Speaker Class: null
+Anonymous Speak Class!

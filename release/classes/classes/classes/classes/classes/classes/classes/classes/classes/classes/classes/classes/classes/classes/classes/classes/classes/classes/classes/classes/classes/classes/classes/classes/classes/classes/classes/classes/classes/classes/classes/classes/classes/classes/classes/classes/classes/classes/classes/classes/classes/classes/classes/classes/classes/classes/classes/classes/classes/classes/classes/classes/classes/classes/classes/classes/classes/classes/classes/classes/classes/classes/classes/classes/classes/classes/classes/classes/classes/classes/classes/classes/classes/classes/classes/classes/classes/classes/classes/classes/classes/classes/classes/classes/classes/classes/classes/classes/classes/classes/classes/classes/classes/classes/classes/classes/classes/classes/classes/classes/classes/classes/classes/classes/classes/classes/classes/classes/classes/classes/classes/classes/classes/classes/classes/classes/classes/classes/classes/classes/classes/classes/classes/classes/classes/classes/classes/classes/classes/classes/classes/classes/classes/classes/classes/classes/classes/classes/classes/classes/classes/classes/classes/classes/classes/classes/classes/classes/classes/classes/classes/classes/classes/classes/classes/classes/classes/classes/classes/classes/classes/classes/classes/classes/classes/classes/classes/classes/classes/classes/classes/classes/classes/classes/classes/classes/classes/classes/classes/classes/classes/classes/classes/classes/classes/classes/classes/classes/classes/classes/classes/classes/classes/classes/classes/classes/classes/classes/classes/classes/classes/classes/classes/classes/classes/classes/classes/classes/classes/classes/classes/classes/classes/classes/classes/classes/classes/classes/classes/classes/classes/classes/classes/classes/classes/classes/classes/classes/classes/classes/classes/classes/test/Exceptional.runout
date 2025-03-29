@@ -1,0 +1,7 @@
+Caught RuntimeException as a subclass of Exception.
+NonExistentFile!! not found
+is trace depth >= 5?: yes
+got an UnsatisfiedLinkError for a NYI native
+no cowsay in java.library.path: /usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+Exception in thread "main" java.lang.Error: I'm the gingerbread man
+	at classes.test.Exceptional.main(Exceptional.java:71)
