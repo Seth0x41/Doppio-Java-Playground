@@ -218,15 +218,22 @@ function runJavaCode() {
   document.getElementById("runButton").disabled = true;
   document.getElementById("status").textContent = "Compiling and running...";
 
+  // Extract the class name from the code
+  const classNameMatch = code.match(/public\s+class\s+(\w+)/);
+  const className = classNameMatch ? classNameMatch[1] : "Main";
+  const fileName = `${className}.java`;
+  const filePath = `/tmp/${fileName}`;
+
   const fs = BrowserFS.BFSRequire("fs");
   try {
-    fs.writeFileSync("/tmp/Main.java", code);
-    console.log("Updated Main.java");
+    // Write the code to the appropriate file name
+    fs.writeFileSync(filePath, code);
+    console.log(`Wrote ${fileName} to /tmp`);
 
-    const mainJavaContent = fs.readFileSync("/tmp/Main.java", "utf8");
-    console.log("Main.java content before compilation:", mainJavaContent);
+    const javaFileContent = fs.readFileSync(filePath, "utf8");
+    console.log(`${fileName} content before compilation:`, javaFileContent);
 
-    // Verify javac is available by checking for tools.jar
+    // Check if tools.jar exists for compilation
     const toolsJarExists = fs.existsSync(
       "/release/vendor/java_home/lib/tools.jar"
     );
@@ -244,7 +251,7 @@ function runJavaCode() {
     // Add a delay to make sure filesystem operations are complete
     setTimeout(() => {
       Doppio.VM.CLI(
-        ["-classpath", classpath, "com.sun.tools.javac.Main", "/tmp/Main.java"],
+        ["-classpath", classpath, "com.sun.tools.javac.Main", filePath],
         {
           doppioHomePath: "/release",
           javaHomePath: "/release/vendor/java_home",
@@ -257,28 +264,35 @@ function runJavaCode() {
               "Compilation successful, running...";
 
             try {
-              // Check if Main.class exists and log its location
-              const mainClassExists = fs.existsSync("/tmp/Main.class");
-              console.log("Main.class exists in /tmp:", mainClassExists);
+              // Check if className.class exists and log its location
+              const classFileExists = fs.existsSync(`/tmp/${className}.class`);
+              console.log(
+                `${className}.class exists in /tmp:`,
+                classFileExists
+              );
 
-              if (mainClassExists) {
-                const mainClassStats = fs.statSync("/tmp/Main.class");
-                console.log("Main.class size:", mainClassStats.size, "bytes");
+              if (classFileExists) {
+                const classFileStats = fs.statSync(`/tmp/${className}.class`);
+                console.log(
+                  `${className}.class size:`,
+                  classFileStats.size,
+                  "bytes"
+                );
 
                 // Create copy of the class in root directory to increase visibility
                 fs.writeFileSync(
-                  "/Main.class",
-                  fs.readFileSync("/tmp/Main.class")
+                  `/${className}.class`,
+                  fs.readFileSync(`/tmp/${className}.class`)
                 );
-                console.log("Copied Main.class to root directory");
+                console.log(`Copied ${className}.class to root directory`);
               }
             } catch (e) {
-              console.error("Error checking Main.class:", e);
+              console.error(`Error checking ${className}.class:`, e);
             }
 
             // Add /tmp and root directory to classpath for maximum visibility
             Doppio.VM.CLI(
-              ["-classpath", "/tmp:/", "Main"],
+              ["-classpath", "/tmp:/", className],
               {
                 doppioHomePath: "/release",
                 javaHomePath: "/release/vendor/java_home",
