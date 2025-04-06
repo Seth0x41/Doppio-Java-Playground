@@ -41,8 +41,7 @@ function initFS() {
       });
   } catch (e) {
     console.error("Error setting up FS:", e);
-    document.getElementById("status").textContent =
-      "Error in FS: " + e.message;
+    document.getElementById("status").textContent = "Error in FS: " + e.message;
   }
 }
 
@@ -55,21 +54,15 @@ function createDirectoryIfNotExists(fs, path) {
   }
 }
 
-async function copyJavaHomeToBrowserFS(fs) {
-  const keyFiles = [
-    "lib/doppio.jar",
-    "lib/rt.jar",
-    "lib/charsets.jar", 
-    "lib/jce.jar",
-    "lib/jsse.jar",
-    "lib/tools.jar",
-    "lib/currency.data"
-  ];
+const essentialFiles = ["lib/doppio.jar", "lib/rt.jar", "lib/tools.jar"];
 
+const optionalFiles = ["lib/charsets.jar", "lib/jce.jar", "lib/currency.data"];
+
+async function copyJavaHomeToBrowserFS(fs) {
   let totalSize = 0;
   let fileCount = 0;
 
-  for (const file of keyFiles) {
+  for (const file of essentialFiles) {
     const localFilePath = `release/vendor/java_home/${file}`;
     const virtualFilePath = `/release/vendor/java_home/${file}`;
 
@@ -92,12 +85,12 @@ async function copyJavaHomeToBrowserFS(fs) {
       );
       createDirectoryIfNotExists(fs, dirPath);
       fs.writeFileSync(virtualFilePath, Buffer.from(buffer));
-      
+
       const stats = fs.statSync(virtualFilePath);
       const fileSize = stats.size;
       totalSize += fileSize;
       fileCount++;
-      
+
       console.log(`Copied ${localFilePath} to ${virtualFilePath}`);
       console.log(`File ${virtualFilePath} size: ${fileSize} bytes`);
     } catch (err) {
@@ -105,25 +98,73 @@ async function copyJavaHomeToBrowserFS(fs) {
       throw err;
     }
   }
-  
-  const totalSizeMB = (totalSize / (1024 * 1024)).toFixed(2);
-  
-  console.log(`========================================`);
-  console.log(`Total files copied: ${fileCount}`);
-  console.log(`Total size of all files: ${totalSize} bytes (${totalSizeMB} MB)`);
-  console.log(`========================================`);
-  
-  document.getElementById("status").textContent = 
-    `File system initialized with ${fileCount} files (${totalSizeMB} MB)`;
-  
+
+  // Return early for basic functionality
+  document.getElementById("status").textContent =
+    "Basic runtime loaded. Optional components will load when needed.";
+
+  // Load optional files in the background
+  setTimeout(() => {
+    loadOptionalFiles(fs);
+  }, 3000);
+
   return totalSize;
+}
+
+async function loadOptionalFiles(fs) {
+  let totalSize = 0;
+  let fileCount = 0;
+
+  for (const file of optionalFiles) {
+    const localFilePath = `release/vendor/java_home/${file}`;
+    const virtualFilePath = `/release/vendor/java_home/${file}`;
+
+    console.log(`Attempting to fetch ${localFilePath}`);
+    try {
+      const response = await fetch(localFilePath);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch ${localFilePath}: ${response.status} ${response.statusText}`
+        );
+      }
+      const buffer = await response.arrayBuffer();
+      if (buffer.byteLength === 0) {
+        throw new Error(`Fetched ${localFilePath} but the file is empty`);
+      }
+
+      const dirPath = virtualFilePath.substring(
+        0,
+        virtualFilePath.lastIndexOf("/")
+      );
+      createDirectoryIfNotExists(fs, dirPath);
+      fs.writeFileSync(virtualFilePath, Buffer.from(buffer));
+
+      const stats = fs.statSync(virtualFilePath);
+      const fileSize = stats.size;
+      totalSize += fileSize;
+      fileCount++;
+
+      console.log(`Copied ${localFilePath} to ${virtualFilePath}`);
+      console.log(`File ${virtualFilePath} size: ${fileSize} bytes`);
+    } catch (err) {
+      console.error(`Error copying ${localFilePath}:`, err);
+      console.log(`Continuing with remaining files...`);
+    }
+  }
+
+  if (fileCount > 0) {
+    const totalSizeMB = (totalSize / (1024 * 1024)).toFixed(2);
+    console.log(`Additional ${fileCount} files loaded (${totalSizeMB} MB)`);
+    document.getElementById("status").textContent = "Full runtime loaded.";
+  } else {
+    console.log("No additional files were loaded successfully");
+  }
 }
 
 function loadDoppio() {
   if (typeof window.Doppio === "undefined") {
     console.error("Doppio not loaded. Check doppio.js");
-    document.getElementById("status").textContent =
-      "Error: Doppio not loaded";
+    document.getElementById("status").textContent = "Error: Doppio not loaded";
     return;
   }
   console.log("Doppio loaded successfully");
@@ -133,8 +174,7 @@ function loadDoppio() {
 
 function checkAllReady() {
   if (fsReady && doppioReady) {
-    document.getElementById("status").textContent =
-      "Ready to run Java code";
+    document.getElementById("status").textContent = "Ready to run Java code";
     document.getElementById("runButton").disabled = false;
   }
 }
@@ -159,7 +199,7 @@ function moveClassFile(fs, from, to) {
     const classContent = fs.readFileSync(from);
     fs.writeFileSync(to, classContent);
     console.log(`Moved class file from ${from} to ${to}`);
-    
+
     // Verify the file
     const stats = fs.statSync(to);
     console.log(`File ${to} size: ${stats.size} bytes`);
@@ -176,8 +216,7 @@ function runJavaCode() {
 
   consoleDiv.textContent = "";
   document.getElementById("runButton").disabled = true;
-  document.getElementById("status").textContent =
-    "Compiling and running...";
+  document.getElementById("status").textContent = "Compiling and running...";
 
   const fs = BrowserFS.BFSRequire("fs");
   try {
@@ -187,73 +226,84 @@ function runJavaCode() {
     const mainJavaContent = fs.readFileSync("/tmp/Main.java", "utf8");
     console.log("Main.java content before compilation:", mainJavaContent);
 
+    // Verify javac is available by checking for tools.jar
+    const toolsJarExists = fs.existsSync(
+      "/release/vendor/java_home/lib/tools.jar"
+    );
+    console.log("tools.jar exists:", toolsJarExists);
+
+    // Include all essential jars in the classpath
     const classpath = [
       "/release/vendor/java_home/lib/doppio.jar",
       "/release/vendor/java_home/lib/rt.jar",
-      "/release/vendor/java_home/lib/tools.jar"
+      "/release/vendor/java_home/lib/tools.jar",
     ].join(":");
 
     console.log("Using classpath for compilation:", classpath);
 
-    Doppio.VM.CLI(
-      [
-        "-classpath",
-        classpath,
-        "com.sun.tools.javac.Main",
-        "/tmp/Main.java",
-      ],
-      {
-        doppioHomePath: "/release",
-        javaHomePath: "/release/vendor/java_home",
-        nativeClasspath: ["/release/vendor/natives"],
-      },
-      function (exitCode) {
-        if (exitCode === 0) {
-          console.log("Compilation successful");
-          document.getElementById("status").textContent =
-            "Compilation successful, running...";
+    // Add a delay to make sure filesystem operations are complete
+    setTimeout(() => {
+      Doppio.VM.CLI(
+        ["-classpath", classpath, "com.sun.tools.javac.Main", "/tmp/Main.java"],
+        {
+          doppioHomePath: "/release",
+          javaHomePath: "/release/vendor/java_home",
+          nativeClasspath: ["/release/vendor/natives"],
+        },
+        function (exitCode) {
+          if (exitCode === 0) {
+            console.log("Compilation successful");
+            document.getElementById("status").textContent =
+              "Compilation successful, running...";
 
-          try {
-            const mainClassExists = fs.existsSync("/tmp/Main.class");
-            console.log("Main.class exists:", mainClassExists);
-            if (mainClassExists) {
-              const mainClassStats = fs.statSync("/tmp/Main.class");
-              console.log(
-                "Main.class size:",
-                mainClassStats.size,
-                "bytes"
-              );
-            }
-          } catch (e) {
-            console.error("Error checking Main.class:", e);
-          }
+            try {
+              // Check if Main.class exists and log its location
+              const mainClassExists = fs.existsSync("/tmp/Main.class");
+              console.log("Main.class exists in /tmp:", mainClassExists);
 
-          Doppio.VM.CLI(
-            ["-classpath", "/tmp", "Main"],
-            {
-              doppioHomePath: "/release",
-              javaHomePath: "/release/vendor/java_home",
-              nativeClasspath: ["/release/vendor/natives"],
-            },
-            function (runExitCode) {
-              document.getElementById("runButton").disabled = false;
-              if (runExitCode === 0) {
-                document.getElementById("status").textContent =
-                  "Execution completed successfully";
-              } else {
-                document.getElementById("status").textContent =
-                  "Execution failed with exit code: " + runExitCode;
+              if (mainClassExists) {
+                const mainClassStats = fs.statSync("/tmp/Main.class");
+                console.log("Main.class size:", mainClassStats.size, "bytes");
+
+                // Create copy of the class in root directory to increase visibility
+                fs.writeFileSync(
+                  "/Main.class",
+                  fs.readFileSync("/tmp/Main.class")
+                );
+                console.log("Copied Main.class to root directory");
               }
+            } catch (e) {
+              console.error("Error checking Main.class:", e);
             }
-          );
-        } else {
-          console.error("Compilation failed with exit code:", exitCode);
-          document.getElementById("status").textContent =
-            "Compilation failed with exit code: " + exitCode;
-          document.getElementById("runButton").disabled = false;
+
+            // Add /tmp and root directory to classpath for maximum visibility
+            Doppio.VM.CLI(
+              ["-classpath", "/tmp:/", "Main"],
+              {
+                doppioHomePath: "/release",
+                javaHomePath: "/release/vendor/java_home",
+                nativeClasspath: ["/release/vendor/natives"],
+              },
+              function (runExitCode) {
+                document.getElementById("runButton").disabled = false;
+                if (runExitCode === 0) {
+                  document.getElementById("status").textContent =
+                    "Execution completed successfully";
+                } else {
+                  document.getElementById("status").textContent =
+                    "Execution failed with exit code: " + runExitCode;
+                }
+              }
+            );
+          } else {
+            console.error("Compilation failed with exit code:", exitCode);
+            document.getElementById("status").textContent =
+              "Compilation failed with exit code: " + exitCode;
+            document.getElementById("runButton").disabled = false;
+          }
         }
-      }
-    );
+      );
+    }, 500); // Half-second delay to ensure filesystem operations complete
   } catch (e) {
     consoleDiv.textContent += "Error: " + e.message + "\n";
     document.getElementById("status").textContent =
@@ -264,16 +314,12 @@ function runJavaCode() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("runButton")
-    .addEventListener("click", runJavaCode);
-  document
-    .getElementById("clearButton")
-    .addEventListener("click", function () {
-      document.getElementById("console").textContent = "";
-    });
+  document.getElementById("runButton").addEventListener("click", runJavaCode);
+  document.getElementById("clearButton").addEventListener("click", function () {
+    document.getElementById("console").textContent = "";
+  });
 
   initFS();
   setupConsole();
   loadDoppio();
-}); 
+});
