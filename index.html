@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Doppio Java Playground</title>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/browserfs@1.4.3/dist/browserfs.min.js"
+    ></script>
+    <script type="text/javascript" src="doppio.js"></script>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <h1> Java Playground</h1>
+    <p>Write your Java code below and click "Run" to execute it.</p>
+
+    <textarea id="code" placeholder="Enter your Java code here">
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello from Doppio!");
+        int x = 5;
+        int y = 10;
+        System.out.println("x + y = " + (x + y));
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Loop iteration: " + i);
+        }
+    }
+}
+    </textarea>
+
+    <div>
+      <button id="runButton" disabled>Run</button>
+      <button id="clearButton">Clear Console</button>
+    </div>
+
+    <div id="status">Initializing Doppio...</div>
+
+    <h3>Console Output:</h3>
+    <div id="console"></div>
+    
+    <script src="script.js"></script>
+  </body>
+</html>
